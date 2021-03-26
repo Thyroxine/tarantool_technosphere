@@ -16,15 +16,22 @@ local function proxy(req)
     print("Request headers")
     ---for key,value in pairs(req_headers) do print(key,value) end
     print("Request params")
+    local method = req:method()
     for key,value in pairs(req:param()) do print(key,value) end
-    local uri_params=urlencode.table(req:param())
-    print(uri_params)
-    local resp = client:request(req:method(),proxy_host..":"..proxy_port..req:path(),uri_params,
+    local uri_params=""
+    if method == "POST" or method == "PUT" then
+        uri_params=urlencode.table(req:param())
+        print(uri_params)
+        req_headers['content-length']=nil
+    else
+    end
+    --local resp = client:request(req:method(),proxy_host..":"..proxy_port..req:path(),uri_params,
+    local resp = client:request(req:method(),proxy_host..":"..proxy_port..req:path().."?"..req:query(),uri_params,
             {headers=req_headers,follow_location=false, verbose=true, max_header_name_len=128, accept_encoding=true})
     ---print(resp.body)
     print(resp.status)
     --for key,value in pairs(resp.headers) do print(key,value) end
-    for key,value in pairs(client:stat()) do print(key,value) end
+ --   for key,value in pairs(client:stat()) do print(key,value) end
     resp.headers["transfer-encoding"]=nil
     resp.headers["server"]=nil
     return {

@@ -19,7 +19,8 @@ Database name: joomla
 Database user: joomla
 Database password: joomla
 ```
-Save you admin login and password.
+Save your admin login and password.
+
 2. Run proxy
 ```
 tarantool proxy.lua

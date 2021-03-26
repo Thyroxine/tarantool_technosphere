@@ -14,18 +14,20 @@ services:
       - app-network
 
   joomla:
-    image: joomla
+    image: joomla:php7.4-apache
     restart: always
     depends_on:
       - db
     ports:
       - 8080:80
     environment:
-      - JOOMLA_DB_HOST=db:3306
+      - JOOMLA_DB_HOST=db
       - JOOMLA_DB_USER=$MYSQL_USER
       - JOOMLA_DB_PASSWORD=$MYSQL_PASSWORD
     networks:
       - app-network
+    volumes:
+      - ./log:/var/log/apache2
 
 
 networks:

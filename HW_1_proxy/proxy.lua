@@ -6,7 +6,7 @@
 ---
 local function proxy(req)
     local client=require('http.client').new()
-    local urlencode=loadfile('urlencode.lua')
+    local urlencode=require('urlencode')
     ---    print("Proxy working")
     print(req:method())
     print(req:path())
@@ -14,16 +14,17 @@ local function proxy(req)
     print(req:query())
     local req_headers=req:headers()
     print("Request headers")
-    for key,value in pairs(req_headers) do print(key,value) end
+    ---for key,value in pairs(req_headers) do print(key,value) end
     print("Request params")
     for key,value in pairs(req:param()) do print(key,value) end
-    local uri_params=urlencode(req:param())
+    local uri_params=urlencode.table(req:param())
     print(uri_params)
     local resp = client:request(req:method(),proxy_host..":"..proxy_port..req:path(),uri_params,
-            {headers=req_headers,follow_location=false, verbose=true, max_header_name_len=128,accept_encoding=false})
-  ---  print(resp.body)
+            {headers=req_headers,follow_location=false, verbose=true, max_header_name_len=128, accept_encoding=true})
+    ---print(resp.body)
     print(resp.status)
----    for key,value in pairs(resp.headers) do print(key,value) end
+    --for key,value in pairs(resp.headers) do print(key,value) end
+    for key,value in pairs(client:stat()) do print(key,value) end
     resp.headers["transfer-encoding"]=nil
     resp.headers["server"]=nil
     return {

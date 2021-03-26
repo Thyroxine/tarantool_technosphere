@@ -4,8 +4,18 @@
 --- Created by Kirill Kopylov.
 --- DateTime: 3/24/21 7:56 PM
 ---
+---
+box.cfg {
+   listen = 3301,
+   background = true,
+   log = '1.log',
+   pid_file = '1.pid'
+}
+
+
 local function proxy(req)
     local client=require('http.client').new()
+    local json=require('json')
     local urlencode=require('urlencode')
     ---    print("Proxy working")
     print(req:method())
@@ -13,17 +23,22 @@ local function proxy(req)
     print("Request query")
     print(req:query())
     local req_headers=req:headers()
-    print("Request headers")
+    ---print("Request headers")
     ---for key,value in pairs(req_headers) do print(key,value) end
     print("Request params")
     local method = req:method()
     for key,value in pairs(req:param()) do print(key,value) end
     local uri_params=""
-    if method == "POST" or method == "PUT" then
-        uri_params=urlencode.table(req:param())
-        print(uri_params)
+    if method == "POST" then
         req_headers['content-length']=nil
-    else
+        if req_headers['content-type'] == 'application/x-www-form-urlencoded' then
+            uri_params=urlencode.table(req:param())
+        end
+        if req_headers['content-type'] == 'application/json' then
+            uri_params=json.encode(req:param())
+        end
+        print(uri_params)
+
     end
     --local resp = client:request(req:method(),proxy_host..":"..proxy_port..req:path(),uri_params,
     local resp = client:request(req:method(),proxy_host..":"..proxy_port..req:path().."?"..req:query(),uri_params,

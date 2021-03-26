@@ -26,6 +26,6 @@ tarantool proxy.lua
 ```
 It reads settings from `proxy.yml`
 
-3. Navigate to proxied joomla to http://localhost:9001 or http://localhost:9001/admininstrator and login with . Login and editing works. Installation does not work. File upload does not work because Tarantool HTTP does not support multipart/formdata POST queries (See https://github.com/tarantool/http/blob/8909e39049b8124c62593ce4e83ab68b95c47765/http/router/request.lua).
+3. Navigate to proxied joomla to http://localhost:9001 or http://localhost:9001/admininstrator and login with admin login and password. Login and editing works. Installation does not work. File upload does not work because Tarantool HTTP does not support multipart/formdata POST queries (See https://github.com/tarantool/http/blob/8909e39049b8124c62593ce4e83ab68b95c47765/http/router/request.lua).
 
 3. Stop joomla container by `docker-compose down` when not needed.

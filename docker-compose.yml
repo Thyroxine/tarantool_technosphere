@@ -28,6 +28,7 @@ services:
       - app-network
     volumes:
       - ./log:/var/log/apache2
+      - ./data:/var/www/html
 
 
 networks:

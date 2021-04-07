@@ -1,0 +1,18 @@
+---
+load_balancer:
+  port: 8080
+  admin_port: 8888
+  limit: 1000
+  hosts:
+    - host: localhost
+      port: 3030
+      login: admin
+      password: test
+    - host: localhost
+      port: 3031
+      login: admin
+      password: test
+    - host: localhost
+      port: 3032
+      login: admin
+      password: test

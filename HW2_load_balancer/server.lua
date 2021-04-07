@@ -8,11 +8,17 @@
 
 local clock = require('clock')
 local fio = require('fio')
-local http_server = require('http.server')
-local digest = require('digest')
-local host = 'localhost'
+local hostname = require('popen').shell('hostname','r')
 local port = tonumber(arg[1])
+local login = tostring(arg[2])
+local password = tostring(arg[3])
 
+local host = hostname:read():rstrip()
+hostname:close()
+
+if #arg < 3 then
+    error("Usage: tarantool -i server.lua <port> <username> <password>")
+end
 if port == nil then
     error('Invalid port')
 end
@@ -23,28 +29,20 @@ box.cfg({
     listen = port,	
     work_dir = work_dir,
 })
-box.schema.user.passwd('admin', 'test')
+box.schema.user.passwd(login, password)
 
 local requests_timestamps = {}
 
 local function stats()
     local current_time = clock.monotonic64()
     table.insert(requests_timestamps, current_time)
-    while table.maxn(requests_timestamps) ~= 0 and current_time - requests_timestamps[1] > 1e9 do
+    while #requests_timestamps ~= 0 and current_time - requests_timestamps[1] > 1e9 do
         table.remove(requests_timestamps, 1)
     end 
-    body = host..':'..port..': '..tostring(table.maxn(requests_timestamps))
-    return {
-        body = body,
-        status = 200,
-    }
+    local host_stats = host..':'..port..': '..#requests_timestamps
+    return host_stats
 end
 
-local httpd = http_server.new('localhost', 8080, {log_requests = true})
-
-local router = require('http.router').new()
-
-router:route({method = 'GET', path = '/'}, stats)
-httpd:set_router(router)
-
-httpd:start()
+function exec()
+    return stats()
+end

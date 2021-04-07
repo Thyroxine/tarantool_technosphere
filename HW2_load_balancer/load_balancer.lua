@@ -18,11 +18,10 @@ local console = require('console')
 local hosts = {}
 local httpd = {}
 local connections = {}
-local active_hosts=0
 local config = {}
 local port = 0
 local req_num = 1
-local requests_timestamps={}
+local requests_timestamps = {}
 
 local function rpc(conn)
     if conn ~= nil and conn:is_connected() then
@@ -117,7 +116,6 @@ local function connect()
 
     for _, host in ipairs(hosts) do
         local conn = netbox.connect(host)
-        active_hosts = active_hosts + 1
         assert(conn)
         log.info('Connected to %s', host)
         table.insert(connections, conn)
@@ -131,7 +129,6 @@ local function disconnect()
             conn:close()
             table.remove(connections,id)
             table.remove(hosts,id)
-            active_hosts = active_hosts - 1
         end
     end
 end

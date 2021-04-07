@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#docker-compose up -d
+docker-compose up -d
 tarantool proxy.lua
 echo "Waiting for tarantool to start"
 sleep 10
@@ -28,6 +28,6 @@ else
 fi
 
 rm -f POST_original.out POST_proxied.out GET_original.out GET_proxied.out GET_original_sorted.out GET_proxied_sorted.out POST_original_sorted.out POST_proxied_sorted.out
-#docker-compose down
+docker-compose down
 
 kill -s SIGTERM $(cat 1.pid)

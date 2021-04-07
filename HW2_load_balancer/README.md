@@ -8,7 +8,7 @@ How to launch load balancer:
 load_balancer:
   port: 8080 # Listening HTTP port
   admin_port: 8888 # admin console port
-  limit: 10 # Maximum requests per second
+  limit: 1000 # Maximum requests per second
   hosts: #Backend servers
     - host: localhost
       port: 3030

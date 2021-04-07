@@ -1,6 +1,6 @@
 ---
 load_balancer:
-  port: 8082
+  port: 8080
   admin_port: 8888
   limit: 1000
   hosts:
